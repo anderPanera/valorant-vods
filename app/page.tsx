@@ -1,7 +1,7 @@
+
+
 export default function Home() {
   return (
-    <main>
-      <div>Comienzo de develop</div>
-    </main>
+      <div>Valorant Vods</div>
   )
 }

@@ -1,3 +1,5 @@
+import Navbar from "@/components/navbar/Navbar"
+
 export const metadata = {
   title: 'Valorant Vods',
   description: 'Valorant Vods',
@@ -10,7 +12,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body>{children}</body>
+      <body>
+
+        {children}
+      </body>
     </html>
   )
 }
