@@ -1,4 +1,5 @@
 import Navbar from "@/components/navbar/Navbar"
+import './scss/app.scss'
 
 export const metadata = {
   title: 'Valorant Vods',

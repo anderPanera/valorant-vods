@@ -7,9 +7,9 @@ export async function GET(request: Request) {
     let res: PostgrestSingleResponse<{ [x: string]: any; }[]>;
 
     if (mapa == 'undefined' || mapa == null) {
-        res = await supabase.from('VODS').select()
+        res = await supabase.from('VODS').select().order('fecha', { ascending: false })
     } else {
-        res = await supabase.from('VODS').select().eq('mapa', mapa)
+        res = await supabase.from('VODS').select().eq('mapa', mapa).order('fecha', { ascending: false })
     }
 
     return new Response(JSON.stringify(res.data))

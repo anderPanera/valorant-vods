@@ -2,33 +2,28 @@
 
 import { FormHTMLAttributes, useEffect, useRef, useState } from "react";
 import TablaVods from "./TablaVods";
-
+import styles from './vods.module.css'
 
 
 export default function Vods() {
 
     const [vods, setVods] = useState([])
     const [mapa, setMapa] = useState('undefined')
-    const [mapas, setMapas] = useState([{id: 0, nombre: ''}])
-
-    
-
-    async function getMapas() {
-        const res = await fetch(`http://localhost:3000/api/getMapas`)
-        const data = await res.json()
-        setMapas(data)
-    }
+    const [mapas, setMapas] = useState([{"id":1,"nombre":"Ascent"},{"id":2,"nombre":"Bind"},{"id":3,"nombre":"Haven"},{"id":4,"nombre":"Split"},{"id":5,"nombre":"Breeze"},{"id":6,"nombre":"Pearl"},{"id":7,"nombre":"Icebox"},{"id":8,"nombre":"Fracture"},{"id":9,"nombre":"Lotus"}])
+    const [cVods, setCVods] = useState(true)
 
     async function getVods(mapa: any) {
+        setCVods(true)
         const res = await fetch(`http://localhost:3000/api/getVods?mapa=${mapa}`);
         const vods = await res.json()
         setVods(vods)
+        setCVods(false)
     }
 
     useEffect(() => {
         getVods(mapa)
-        getMapas()
     }, [mapa])
+    
 
 
     const inputmapa = useRef('')
@@ -38,13 +33,12 @@ export default function Vods() {
     function handleSubmit(e: HTMLFormElement) {
         e.preventDefault()
         
-        
-        let mapa = inputmapa.current.value
+        let mapaa = inputmapa.current.value
         let link = inputlink.current.value
         let fecha = inputfecha.current.value
 
         const data = {
-            mapa: mapa,
+            mapa: mapaa,
             link: link,
             fecha: fecha
         }
@@ -58,26 +52,32 @@ export default function Vods() {
         })
 
         setTimeout(() => {
-            getVods('undefined')
+            getVods(mapa)
         }, 1000);
     }
-    
 
     return(
-        <div>
-            <h2>COMPONENTE VODS</h2>
-            <select onChange={(e) => setMapa(e.target.value)}>
-                {mapas.map(mapa => (
-                    <option value={mapa.id} key={mapa.id}>{mapa.nombre}</option>
-                ))}
-            </select>
-            <TablaVods vods={vods} mapas={mapas}></TablaVods>
-            <form onSubmit={(e: any) => handleSubmit(e)}>
-                <input id="mapa" ref={inputmapa as any}></input>
-                <input id="link" ref={inputlink as any}></input>
-                <input id="fecha" type={'date'} ref={inputfecha as any}></input>
-                <button>Añadir vod</button>
-            </form>
+        <div className="container ">
+            <h2>VODS</h2>
+            
+            
+            <div className="my-3 p-3 bg-primary rounded">
+                <h3>Añadir una vod</h3>
+                <form onSubmit={(e: any) => handleSubmit(e)}>
+                    <div className="d-flex gap-2">
+                        <select className="form-select" ref={inputmapa as any}>
+                            {mapas.map(mapa => (
+                                <option value={mapa.id} key={mapa.id}>{mapa.nombre}</option>
+                            ))}
+                        </select>
+                        <input className="form-control" type="text" ref={inputlink as any}/>
+                        <input type="date" className="form-control" ref={inputfecha as any}/>
+                        <button type="submit" className="btn btn-light">Añadir</button>
+                    </div>
+                </form>
+            </div>
+
+            <div className='rounded  p-3'><TablaVods vods={vods} mapas={mapas} mapa={mapa} setMapa={setMapa} cVods={cVods} setCVods={setCVods}></TablaVods></div>
         </div>
     )
 }
