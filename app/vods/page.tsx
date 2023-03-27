@@ -11,7 +11,7 @@ export default function Vods() {
     const [mapa, setMapa] = useState('undefined')
     const [mapas, setMapas] = useState([{id: 0, nombre: ''}])
 
-    const testref = useRef(null)
+    
 
     async function getMapas() {
         const res = await fetch(`http://localhost:3000/api/getMapas`)
@@ -30,16 +30,24 @@ export default function Vods() {
         getMapas()
     }, [mapa])
 
+
+    const inputmapa = useRef('')
+    const inputlink = useRef('')
+    const inputfecha = useRef('')
+
     function handleSubmit(e: HTMLFormElement) {
         e.preventDefault()
         
         
-        const id = testref.current.value
+        let mapa = inputmapa.current.value
+        let link = inputlink.current.value
+        let fecha = inputfecha.current.value
 
-        const data = {id: id}
-    
-    
-    
+        const data = {
+            mapa: mapa,
+            link: link,
+            fecha: fecha
+        }
     
         fetch('/api/getVods', {
             method: 'POST',
@@ -47,7 +55,11 @@ export default function Vods() {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({data}),
-          }).catch((e) => console.log(e))
+        })
+
+        setTimeout(() => {
+            getVods('undefined')
+        }, 1000);
     }
     
 
@@ -61,7 +73,9 @@ export default function Vods() {
             </select>
             <TablaVods vods={vods} mapas={mapas}></TablaVods>
             <form onSubmit={(e: any) => handleSubmit(e)}>
-                <input id="1" ref={testref as any}></input>
+                <input id="mapa" ref={inputmapa as any}></input>
+                <input id="link" ref={inputlink as any}></input>
+                <input id="fecha" type={'date'} ref={inputfecha as any}></input>
                 <button>Añadir vod</button>
             </form>
         </div>

@@ -17,8 +17,17 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
     var string = new TextDecoder().decode((await request.body?.getReader().read()).value);
-    console.log(JSON.parse(string).data)
+    let vod = JSON.parse(string).data
 
-    console.log('hace el post')
-    return new Response('hola esto es el post')
+    const { error } = await supabase
+    .from('VODS')
+    .insert([
+    { mapa: vod.mapa , link: vod.link, fecha: vod.fecha },
+    ])
+
+    if (error) {
+        return new Response(JSON.stringify({ ok: false }))
+    }
+
+    return new Response(JSON.stringify({ ok: true }))
 }
