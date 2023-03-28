@@ -23,8 +23,6 @@ export default function Vods() {
     useEffect(() => {
         getVods(mapa)
     }, [mapa])
-    
-
 
     const inputmapa = useRef('')
     const inputlink = useRef('')
@@ -56,10 +54,23 @@ export default function Vods() {
         }, 1000);
     }
 
+    function handleDelete(id: number) {
+        fetch('/api/getVods', {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({id: id}),
+        })
+
+        setTimeout(() => {
+            getVods(mapa)
+        }, 1000);
+    }
+
     return(
         <div className="container ">
             <h2>VODS</h2>
-            
             
             <div className="my-3 p-3 bg-primary rounded">
                 <h3>Añadir una vod</h3>
@@ -70,14 +81,14 @@ export default function Vods() {
                                 <option value={mapa.id} key={mapa.id}>{mapa.nombre}</option>
                             ))}
                         </select>
-                        <input className="form-control" type="text" ref={inputlink as any}/>
+                        <input className="form-control" placeholder="Enlace de vod" type="text" ref={inputlink as any}/>
                         <input type="date" className="form-control" ref={inputfecha as any}/>
                         <button type="submit" className="btn btn-light">Añadir</button>
                     </div>
                 </form>
             </div>
 
-            <div className='rounded  p-3'><TablaVods vods={vods} mapas={mapas} mapa={mapa} setMapa={setMapa} cVods={cVods} setCVods={setCVods}></TablaVods></div>
+            <div className='rounded bg-dark p-3'><TablaVods vods={vods} mapas={mapas} mapa={mapa} setMapa={setMapa} cVods={cVods} handleDelete={handleDelete}></TablaVods></div>
         </div>
     )
 }

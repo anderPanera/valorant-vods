@@ -16,18 +16,35 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-    var string = new TextDecoder().decode((await request.body?.getReader().read()).value);
-    let vod = JSON.parse(string).data
+    if (request.body != null) {
+        var string = new TextDecoder().decode((await request.body.getReader().read()).value);
+        let vod = JSON.parse(string).data
 
-    const { error } = await supabase
-    .from('VODS')
-    .insert([
-    { mapa: vod.mapa , link: vod.link, fecha: vod.fecha },
-    ])
+        const { error } = await supabase
+        .from('VODS')
+        .insert([
+        { mapa: vod.mapa , link: vod.link, fecha: vod.fecha },
+        ])
 
-    if (error) {
-        return new Response(JSON.stringify({ ok: false }))
+        if (error) {
+            return new Response(JSON.stringify({ ok: false }))
+        }
+
+        return new Response(JSON.stringify({ ok: true }))
     }
+}
 
-    return new Response(JSON.stringify({ ok: true }))
+export async function DELETE(request: Request) {
+    if (request.body != null) {
+        var string = new TextDecoder().decode((await request.body.getReader().read()).value);
+        let id = JSON.parse(string).id
+    
+        const { error } = await supabase
+        .from('VODS')
+        .delete()
+        .eq('id', id)
+    
+        return new Response(JSON.stringify({ ok: true }))
+    }
+    return new Response(JSON.stringify({ ok: false }))
 }
