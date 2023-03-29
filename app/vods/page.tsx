@@ -1,6 +1,6 @@
 "use client"
 
-import { FormHTMLAttributes, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import TablaVods from "./TablaVods";
 import styles from './vods.module.css'
 
@@ -24,21 +24,17 @@ export default function Vods() {
         getVods(mapa)
     }, [mapa])
 
-    const inputmapa = useRef('')
-    const inputlink = useRef('')
-    const inputfecha = useRef('')
+    const [inputMapa, setInputMapa] = useState('1')
+    const [inputLink, setInputLink] = useState('')
+    const [inputFecha, setInputFecha] = useState('')
 
     function handleSubmit(e: HTMLFormElement) {
         e.preventDefault()
-        
-        let mapaa = inputmapa.current.value
-        let link = inputlink.current.value
-        let fecha = inputfecha.current.value
 
         const data = {
-            mapa: mapaa,
-            link: link,
-            fecha: fecha
+            mapa: inputMapa,
+            link: inputLink,
+            fecha: inputFecha
         }
     
         fetch('/api/getVods', {
@@ -49,9 +45,8 @@ export default function Vods() {
             body: JSON.stringify({data}),
         })
 
-        setTimeout(() => {
-            getVods(mapa)
-        }, 1000);
+        getVods(mapa)
+
     }
 
     function handleDelete(id: number) {
@@ -63,9 +58,7 @@ export default function Vods() {
             body: JSON.stringify({id: id}),
         })
 
-        setTimeout(() => {
-            getVods(mapa)
-        }, 1000);
+        getVods(mapa)
     }
 
     return(
@@ -76,13 +69,13 @@ export default function Vods() {
                 <h3>Añadir una vod</h3>
                 <form onSubmit={(e: any) => handleSubmit(e)}>
                     <div className="d-flex gap-2">
-                        <select className="form-select" ref={inputmapa as any}>
+                        <select className="form-select" onChange={(e) => setInputMapa(e.target.value)}>
                             {mapas.map(mapa => (
                                 <option value={mapa.id} key={mapa.id}>{mapa.nombre}</option>
                             ))}
                         </select>
-                        <input className="form-control" placeholder="Enlace de vod" type="text" ref={inputlink as any}/>
-                        <input type="date" className="form-control" ref={inputfecha as any}/>
+                        <input className="form-control" placeholder="Enlace de vod" type="text" onChange={(e) => setInputLink(e.target.value)}/>
+                        <input type="date" className="form-control" onChange={(e) => setInputFecha(e.target.value)}/>
                         <button type="submit" className="btn btn-light">Añadir</button>
                     </div>
                 </form>
